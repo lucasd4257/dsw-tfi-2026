@@ -30,7 +30,7 @@ public class AvailabilitySlot : EntityBase
         IsActive = true;
     }
 
-    public void ChangeStatus(string newStatus)
+    public void ChangeStatus(AvailabilitySlotStatus newStatus)
     {
         Status = newStatus;
     }

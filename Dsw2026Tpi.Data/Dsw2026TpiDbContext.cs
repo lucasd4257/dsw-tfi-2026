@@ -10,7 +10,6 @@ public class Dsw2026TpiDbContext : DbContext
     {
     }
 
-    public DbSet<User> Users => Set<User>();
     public DbSet<Patient> Patients => Set<Patient>();
     public DbSet<Doctor> Doctors => Set<Doctor>();
     public DbSet<Speciality> Specialities => Set<Speciality>();
@@ -22,35 +21,17 @@ public class Dsw2026TpiDbContext : DbContext
     {
         base.OnModelCreating(modelBuilder);
 
-        // ---------- User ----------
-        modelBuilder.Entity<User>(e =>
-        {
-            e.ToTable("Users");
-            e.Property(p => p.Email).HasMaxLength(150).IsRequired();
-            e.HasIndex(p => p.Email).IsUnique();
-            e.Property(p => p.Role).HasConversion<string>().HasMaxLength(20).IsRequired();
-            e.Property(p => p.PasswordHash).HasMaxLength(255);
 
-            e.HasQueryFilter(p => p.IsActive);
-        });
-
-        // ---------- Patient ----------
         modelBuilder.Entity<Patient>(e =>
         {
             e.ToTable("Patients");
             e.Property(p => p.Dni).HasMaxLength(10).IsRequired();
             e.HasIndex(p => p.Dni).IsUnique();
-            e.Property(p => p.FullName).HasMaxLength(150).IsRequired();
-
-            e.HasOne(p => p.User)
-             .WithOne()
-             .HasForeignKey<Patient>(p => p.UserId)
-             .OnDelete(DeleteBehavior.Cascade);
-
+            e.Property(p => p.ApplicationUserId).HasMaxLength(450).IsRequired(); // 450 = tamaño estándar de Id en Identity
+            e.HasIndex(p => p.ApplicationUserId).IsUnique();
             e.HasQueryFilter(p => p.IsActive);
         });
 
-        // ---------- Speciality ----------
         modelBuilder.Entity<Speciality>(e =>
         {
             e.ToTable("Specialities");
@@ -59,7 +40,6 @@ public class Dsw2026TpiDbContext : DbContext
             e.Property(p => p.Description).HasMaxLength(100).IsRequired();
         });
 
-        // ---------- Doctor ----------
         modelBuilder.Entity<Doctor>(e =>
         {
             e.ToTable("Doctors");
@@ -75,7 +55,6 @@ public class Dsw2026TpiDbContext : DbContext
             e.HasQueryFilter(p => p.IsActive);
         });
 
-        // ---------- AvailabilityRule ----------
         modelBuilder.Entity<AvailabilityRule>(e =>
         {
             e.ToTable("AvailabilityRules");
@@ -93,7 +72,6 @@ public class Dsw2026TpiDbContext : DbContext
             e.HasQueryFilter(p => p.IsActive);
         });
 
-        // ---------- AvailabilitySlot ----------
         modelBuilder.Entity<AvailabilitySlot>(e =>
         {
             e.ToTable("AvailabilitySlots");
@@ -111,7 +89,6 @@ public class Dsw2026TpiDbContext : DbContext
             e.HasQueryFilter(p => p.IsActive);
         });
 
-        // ---------- Appointment ----------
         modelBuilder.Entity<Appointment>(e =>
         {
             e.ToTable("Appointments");
