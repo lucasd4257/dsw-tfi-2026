@@ -21,17 +21,23 @@ public class Dsw2026TpiDbContext : DbContext
     {
         base.OnModelCreating(modelBuilder);
 
-
+        // ---------- Patient ----------
+        // Nota: ApplicationUserId es una FK "lógica" hacia ApplicationUser (Identity),
+        // que vive en AuthenticationDbContext. No se puede modelar como FK real de EF
+        // porque son contextos distintos, aunque compartan la misma base física.
         modelBuilder.Entity<Patient>(e =>
         {
             e.ToTable("Patients");
             e.Property(p => p.Dni).HasMaxLength(10).IsRequired();
             e.HasIndex(p => p.Dni).IsUnique();
-            e.Property(p => p.ApplicationUserId).HasMaxLength(450).IsRequired(); // 450 = tamaño estándar de Id en Identity
+            e.Property(p => p.FullName).HasMaxLength(150).IsRequired();
+            e.Property(p => p.ApplicationUserId).HasMaxLength(450).IsRequired();
             e.HasIndex(p => p.ApplicationUserId).IsUnique();
+
             e.HasQueryFilter(p => p.IsActive);
         });
 
+        // ---------- Speciality ----------
         modelBuilder.Entity<Speciality>(e =>
         {
             e.ToTable("Specialities");
@@ -40,6 +46,7 @@ public class Dsw2026TpiDbContext : DbContext
             e.Property(p => p.Description).HasMaxLength(100).IsRequired();
         });
 
+        // ---------- Doctor ----------
         modelBuilder.Entity<Doctor>(e =>
         {
             e.ToTable("Doctors");
@@ -55,6 +62,7 @@ public class Dsw2026TpiDbContext : DbContext
             e.HasQueryFilter(p => p.IsActive);
         });
 
+        // ---------- AvailabilityRule ----------
         modelBuilder.Entity<AvailabilityRule>(e =>
         {
             e.ToTable("AvailabilityRules");
@@ -72,10 +80,11 @@ public class Dsw2026TpiDbContext : DbContext
             e.HasQueryFilter(p => p.IsActive);
         });
 
+        // ---------- AvailabilitySlot ----------
         modelBuilder.Entity<AvailabilitySlot>(e =>
         {
             e.ToTable("AvailabilitySlots");
-            e.Property(p => p.Status).HasMaxLength(20).IsRequired();
+            e.Property(p => p.Status).HasConversion<string>().HasMaxLength(20).IsRequired();
 
             e.HasOne(p => p.AvailabilityRule)
              .WithMany()
@@ -89,6 +98,7 @@ public class Dsw2026TpiDbContext : DbContext
             e.HasQueryFilter(p => p.IsActive);
         });
 
+        // ---------- Appointment ----------
         modelBuilder.Entity<Appointment>(e =>
         {
             e.ToTable("Appointments");

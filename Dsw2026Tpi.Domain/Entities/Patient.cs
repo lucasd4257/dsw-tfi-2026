@@ -6,7 +6,8 @@ namespace Dsw2026Tpi.Domain.Entities;
 
 public class Patient : EntityBase
 {
-    public string ApplicationUserId { get; init; }  // FK lógica, sin navegación EF
+    // FK "lógica" hacia ApplicationUser (Identity), que vive en AuthenticationDbContext.
+    public string ApplicationUserId { get; init; }
     public string Dni { get; init; }
     public string FullName { get; init; }
     public bool IsActive { get; private set; }
@@ -25,5 +26,8 @@ public class Patient : EntityBase
         IsActive = true;
     }
 
-    public void Deactivate() => IsActive = false;
+    public void Deactivate()
+    {
+        IsActive = false;
+    }
 }
