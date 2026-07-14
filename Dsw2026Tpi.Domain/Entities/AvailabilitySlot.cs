@@ -11,7 +11,7 @@ public class AvailabilitySlot : EntityBase
     public DateTime SlotDate { get; init; }
     public TimeSpan StartTime { get; init; }
     public TimeSpan EndTime { get; init; }
-    public string Status { get; private set; } 
+    public AvailabilitySlotStatus Status { get; private set; } 
     public bool IsActive { get; private set; }
 
     #region Constructor for EF
@@ -20,7 +20,7 @@ public class AvailabilitySlot : EntityBase
 #pragma warning restore CS8618
     #endregion
 
-    public AvailabilitySlot(Guid availabilityRuleId, DateTime slotDate, TimeSpan startTime, TimeSpan endTime, string status = "AVAILABLE", Guid? id = null) : base(id)
+    public AvailabilitySlot(Guid availabilityRuleId, DateTime slotDate, TimeSpan startTime, TimeSpan endTime, AvailabilitySlotStatus status = AvailabilitySlotStatus.AVAILABLE, Guid? id = null) : base(id)
     {
         AvailabilityRuleId = availabilityRuleId;
         SlotDate = slotDate;

@@ -21,6 +21,7 @@ public class Doctor: EntityBase
     {
         Name = name;
         LicenseNumber = licenseNumber;
+        SpecialityId = speciality.Id;
         Speciality = speciality;
         IsActive = true;
     }
