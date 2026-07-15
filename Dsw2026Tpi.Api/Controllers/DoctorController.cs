@@ -1,6 +1,6 @@
-﻿using Dsw2026Tpi.Application.Interfaces;
+﻿using Dsw2026Tpi.Application.Dtos;
+using Dsw2026Tpi.Application.Interfaces;
 using Dsw2026Tpi.CrossCutting.Identity;
-using Dsw2026Tpi.Application.Dtos;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,10 +11,21 @@ namespace Dsw2026Tpi.Api.Controllers;
 public class DoctorController : AppController
 {
     private readonly IDoctorService _service;
+    private readonly IAvailabilityService _availabilityService;
 
-    public DoctorController(IDoctorService service)
+    public DoctorController(IDoctorService service, IAvailabilityService availabilityService)
     {
         _service = service;
+        _availabilityService = availabilityService;
+    }
+
+    [HttpGet("{id}/availabilities")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> GetAvailabilities(Guid id)
+    {
+        var result = await _availabilityService.GetByDoctor(id);
+        return Ok(result);
     }
 
     [HttpGet]
