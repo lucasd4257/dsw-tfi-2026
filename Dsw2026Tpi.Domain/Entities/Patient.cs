@@ -1,10 +1,11 @@
-﻿using System;
+﻿using Dsw2026Tpi.Domain.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace Dsw2026Tpi.Domain.Entities;
 
-public class Patient : EntityBase
+public class Patient : EntityBase, ISoftDeletable
 {
     // FK "lógica" hacia ApplicationUser (Identity), que vive en AuthenticationDbContext.
     public string ApplicationUserId { get; init; }

@@ -1,10 +1,11 @@
-﻿using System;
+﻿using Dsw2026Tpi.Domain.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace Dsw2026Tpi.Domain.Entities;
 
-public class AvailabilityRule : EntityBase
+public class AvailabilityRule : EntityBase, ISoftDeletable
 {
     public Guid DoctorId { get; init; }
     public Doctor? Doctor { get; private set; }
