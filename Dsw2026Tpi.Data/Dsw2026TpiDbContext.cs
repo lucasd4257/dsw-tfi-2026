@@ -1,5 +1,6 @@
 ﻿using Dsw2026Tpi.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection;
 
 namespace Dsw2026Tpi.Data;
 
