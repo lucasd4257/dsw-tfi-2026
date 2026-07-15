@@ -1,7 +1,9 @@
 ﻿
+using Dsw2026Tpi.Domain.Interfaces;
+
 namespace Dsw2026Tpi.Domain.Entities;
 
-public class AvailabilitySlot : EntityBase
+public class AvailabilitySlot : EntityBase, ISoftDeletable
 {
     public Guid AvailabilityRuleId { get; init; }
     public AvailabilityRule? AvailabilityRule { get; private set; }

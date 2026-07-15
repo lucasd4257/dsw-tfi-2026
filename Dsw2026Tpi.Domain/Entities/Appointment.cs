@@ -1,10 +1,11 @@
-﻿using System;
+﻿using Dsw2026Tpi.Domain.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace Dsw2026Tpi.Domain.Entities
 {
-    public class Appointment : EntityBase
+    public class Appointment : EntityBase, ISoftDeletable
     {
         public Guid AvailabilitySlotId { get; init; }
         public AvailabilitySlot? AvailabilitySlot { get; private set; }
@@ -15,6 +16,8 @@ namespace Dsw2026Tpi.Domain.Entities
 
         public DateTime? CancelledAt { get; private set; }
         public DateTime? AttendedAt { get; private set; }
+
+        public bool IsActive { get; private set; }
 
         #region Constructor for EF
 #pragma warning disable CS8618
@@ -45,6 +48,11 @@ namespace Dsw2026Tpi.Domain.Entities
         public void MarkAsNoShow()
         {
             Status = AppointmentStatus.NO_SHOW;
+        }
+
+        public void Deactivate()
+        {
+            IsActive = false;
         }
     }
 }

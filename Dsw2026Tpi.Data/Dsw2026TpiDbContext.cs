@@ -45,6 +45,8 @@ public class Dsw2026TpiDbContext : DbContext
             e.Property(p => p.Name).HasMaxLength(100).IsRequired();
             e.HasIndex(p => p.Name).IsUnique();
             e.Property(p => p.Description).HasMaxLength(100).IsRequired();
+
+            e.HasQueryFilter(p => p.IsActive);
         });
 
         // ---------- Doctor ----------
@@ -121,6 +123,8 @@ public class Dsw2026TpiDbContext : DbContext
 
             // Control de concurrencia optimista (RN03 / control de concurrencia en reservas)
             e.Property<byte[]>("RowVersion").IsRowVersion();
+
+            e.HasQueryFilter(p => p.IsActive);
         });
     }
 

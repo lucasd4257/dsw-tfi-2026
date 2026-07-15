@@ -1,6 +1,8 @@
-﻿namespace Dsw2026Tpi.Domain.Entities;
+﻿using Dsw2026Tpi.Domain.Interfaces;
 
-public class Doctor : EntityBase
+namespace Dsw2026Tpi.Domain.Entities;
+
+public class Doctor : EntityBase, ISoftDeletable
 {
     public string Name { get; init; }
     public string LicenseNumber { get; init; }

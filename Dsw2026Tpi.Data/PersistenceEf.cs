@@ -114,4 +114,12 @@ public class PersistenceEf: IPersistence
         }
         return includedQuery;
     }
+
+    public async Task<T> SoftDelete<T>(T entity) where T : EntityBase, ISoftDeletable
+    {
+        entity.Deactivate();
+        _context.Update(entity);
+        await _context.SaveChangesAsync();
+        return entity;
+    }
 }
