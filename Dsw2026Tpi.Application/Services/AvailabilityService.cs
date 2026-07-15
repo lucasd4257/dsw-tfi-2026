@@ -10,6 +10,7 @@ public class AvailabilityService : IAvailabilityService
 {
     private readonly IPersistence _persistence;
     private readonly IHolidayService _holidayService;
+    private readonly IClockService _clockService;
 
     // Orden semanal (LUNES a DOMINGO) usado tanto para ordenar la respuesta del GET
     // como para validar/mapear los nombres de día que llegan en el request.
@@ -32,10 +33,11 @@ public class AvailabilityService : IAvailabilityService
             ["DOMINGO"] = (DayOfWeek.Sunday, "DOMINGO"),
         };
 
-    public AvailabilityService(IPersistence persistence, IHolidayService holidayService)
+    public AvailabilityService(IPersistence persistence, IHolidayService holidayService, IClockService clockService)
     {
         _persistence = persistence;
         _holidayService = holidayService;
+        _clockService = clockService;
     }
 
     public async Task<IEnumerable<AvailabilityModel.DayResponse>> GetByDoctor(Guid doctorId)
@@ -45,7 +47,8 @@ public class AvailabilityService : IAvailabilityService
 
         // Decisión de diseño (1): la disponibilidad consultada es siempre la del mes/año
         // actual del servidor, no se admite consultar meses futuros o pasados por este endpoint.
-        var now = DateTime.UtcNow;
+        // Se usa hora local de Argentina (no UTC) para evitar desfasajes cerca de medianoche.
+        var now = _clockService.Now;
 
         var rules = await _persistence.GetFiltered<AvailabilityRule>(
             r => r.DoctorId == doctorId && r.Month == now.Month && r.Year == now.Year);
@@ -65,8 +68,8 @@ public class AvailabilityService : IAvailabilityService
         var parsedDays = ParseAndValidate(request);
         CheckInternalOverlaps(parsedDays);
 
-        // Decisión de diseño (1): siempre se trabaja sobre el mes/año actual.
-        var now = DateTime.UtcNow;
+        // Decisión de diseño (1): siempre se trabaja sobre el mes/año actual, en hora local Argentina.
+        var now = _clockService.Now;
 
         var existingRules = (await _persistence.GetFiltered<AvailabilityRule>(
             r => r.DoctorId == request.DoctorId && r.Month == now.Month && r.Year == now.Year)) ?? [];
@@ -104,8 +107,8 @@ public class AvailabilityService : IAvailabilityService
         var parsedDays = ParseAndValidate(request);
         CheckInternalOverlaps(parsedDays);
 
-        // Decisión de diseño (1): el PUT sobrescribe únicamente el mes/año actual.
-        var now = DateTime.UtcNow;
+        // Decisión de diseño (1): el PUT sobrescribe únicamente el mes/año actual, en hora local Argentina.
+        var now = _clockService.Now;
 
         var existingRules = (await _persistence.GetFiltered<AvailabilityRule>(
             r => r.DoctorId == request.DoctorId && r.Month == now.Month && r.Year == now.Year)) ?? [];
