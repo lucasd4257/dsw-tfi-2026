@@ -2,10 +2,11 @@
 
 namespace Dsw2026Tpi.Domain.Entities;
 
-public class Speciality: EntityBase, ISoftDeletable
+
+public class Speciality : EntityBase, ISoftDeletable
 {
-    public string Name { get; init; }
-    public string Description { get; init; }
+    public string Name { get; private set; }
+    public string Description { get; private set; }
     public bool IsActive { get; private set; }
 
     #region Constructor for EF
@@ -15,6 +16,13 @@ public class Speciality: EntityBase, ISoftDeletable
     #endregion
 
     public Speciality(string name, string description, Guid? id = null) : base(id)
+    {
+        Name = name;
+        Description = description;
+        IsActive = true;
+    }
+
+    public void UpdateDetails(string name, string description)
     {
         Name = name;
         Description = description;
